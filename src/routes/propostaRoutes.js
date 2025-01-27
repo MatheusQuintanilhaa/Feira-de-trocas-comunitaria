@@ -20,6 +20,12 @@ router.get("/", propostaController.getAllPropostas);
 // Histórico de propostas do usuário logado
 router.get("/my-history", propostaController.getMyProposalHistory);
 
+// Buscar propostas recebidas
+router.get("/received", propostaController.getReceivedProposals);
+
+// Buscar propostas enviadas
+router.get("/sent", propostaController.getSentProposals);
+
 // Buscar proposta por ID
 router.get("/:id", propostaController.getPropostaById);
 

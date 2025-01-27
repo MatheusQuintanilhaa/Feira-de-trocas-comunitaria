@@ -16,6 +16,7 @@ router.get("/stats", authenticate, itemController.getStats);
 
 // Rotas que exigem autenticação:
 router.post("/", authenticate, itemController.createItem); // Criar item
+router.get("/my-items", authenticate, itemController.getMyItems); // Buscar itens do usuário logado
 router.get("/", authenticate, itemController.getAllItems); // Listar todos os itens (com filtros)
 router.get("/:id", authenticate, itemController.getItemById); // Buscar item por ID
 
