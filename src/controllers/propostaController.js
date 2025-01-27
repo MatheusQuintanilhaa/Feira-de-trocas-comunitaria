@@ -12,11 +12,9 @@ class PropostaController {
 
     // 1. Validação básica: IDs são obrigatórios e não podem ser o mesmo item
     if (!itemOfertadoId || !itemDesejadoId) {
-      return res
-        .status(400)
-        .json({
-          message: "IDs do item ofertado e item desejado são obrigatórios.",
-        });
+      return res.status(400).json({
+        message: "IDs do item ofertado e item desejado são obrigatórios.",
+      });
     }
     if (itemOfertadoId === itemDesejadoId) {
       return res
@@ -47,12 +45,10 @@ class PropostaController {
 
       // 4. Verificar se o usuário ofertante não está tentando trocar com ele mesmo
       if (itemDesejado.usuarioId === ofertanteId) {
-        return res
-          .status(400)
-          .json({
-            message:
-              "Você não pode fazer uma proposta de troca para seus próprios itens.",
-          });
+        return res.status(400).json({
+          message:
+            "Você não pode fazer uma proposta de troca para seus próprios itens.",
+        });
       }
 
       // 5. Verificar se os itens estão disponíveis para troca
@@ -60,12 +56,10 @@ class PropostaController {
         !itemOfertado.disponivelParaTroca ||
         !itemDesejado.disponivelParaTroca
       ) {
-        return res
-          .status(400)
-          .json({
-            message:
-              "Um ou ambos os itens não estão disponíveis para troca no momento.",
-          });
+        return res.status(400).json({
+          message:
+            "Um ou ambos os itens não estão disponíveis para troca no momento.",
+        });
       }
 
       // AQUI, OBTENHA O ID DO DONO DO ITEM DESEJADO
@@ -132,12 +126,10 @@ class PropostaController {
 
     // Regra de Autorização: Usuário normal só vê suas propostas, Admin vê todas
     if (!req.isAdmin && !isMyProposal) {
-      return res
-        .status(403)
-        .json({
-          message:
-            'Acesso proibido. Para listar todas as propostas, você deve ser administrador ou usar o filtro "isMyProposal=true".',
-        });
+      return res.status(403).json({
+        message:
+          'Acesso proibido. Para listar todas as propostas, você deve ser administrador ou usar o filtro "isMyProposal=true".',
+      });
     }
 
     try {
@@ -233,11 +225,9 @@ class PropostaController {
         proposta.itemDesejado.usuarioId !== userId &&
         !req.isAdmin
       ) {
-        return res
-          .status(403)
-          .json({
-            message: "Você não tem permissão para visualizar esta proposta.",
-          });
+        return res.status(403).json({
+          message: "Você não tem permissão para visualizar esta proposta.",
+        });
       }
 
       return res.status(200).json(proposta);
@@ -270,20 +260,16 @@ class PropostaController {
 
       // 2. Verificar se a proposta está pendente
       if (proposta.status !== "pendente") {
-        return res
-          .status(400)
-          .json({
-            message: `Proposta já está ${proposta.status}. Não pode ser aceita.`,
-          });
+        return res.status(400).json({
+          message: `Proposta já está ${proposta.status}. Não pode ser aceita.`,
+        });
       }
 
       // 3. Verificar se o usuário autenticado é o dono do item desejado
       if (proposta.itemDesejado.usuarioId !== userId) {
-        return res
-          .status(403)
-          .json({
-            message: "Você não tem permissão para aceitar esta proposta.",
-          });
+        return res.status(403).json({
+          message: "Você não tem permissão para aceitar esta proposta.",
+        });
       }
 
       // 4. Realizar a transação para aceitar a proposta e atualizar os itens
@@ -310,12 +296,10 @@ class PropostaController {
         return updatedProposta;
       });
 
-      return res
-        .status(200)
-        .json({
-          message: "Proposta aceita com sucesso!",
-          proposta: acceptedProposta,
-        });
+      return res.status(200).json({
+        message: "Proposta aceita com sucesso!",
+        proposta: acceptedProposta,
+      });
     } catch (error) {
       console.error("Erro ao aceitar proposta:", error);
       if (error.code === "P2025") {
@@ -350,20 +334,16 @@ class PropostaController {
 
       // 2. Verificar se a proposta está pendente
       if (proposta.status !== "pendente") {
-        return res
-          .status(400)
-          .json({
-            message: `Proposta já está ${proposta.status}. Não pode ser rejeitada.`,
-          });
+        return res.status(400).json({
+          message: `Proposta já está ${proposta.status}. Não pode ser rejeitada.`,
+        });
       }
 
       // 3. Verificar se o usuário autenticado é o dono do item desejado
       if (proposta.itemDesejado.usuarioId !== userId) {
-        return res
-          .status(403)
-          .json({
-            message: "Você não tem permissão para rejeitar esta proposta.",
-          });
+        return res.status(403).json({
+          message: "Você não tem permissão para rejeitar esta proposta.",
+        });
       }
 
       // 4. Atualizar o status da proposta para 'rejeitada'
@@ -378,12 +358,10 @@ class PropostaController {
         },
       });
 
-      return res
-        .status(200)
-        .json({
-          message: "Proposta rejeitada com sucesso!",
-          proposta: rejectedProposta,
-        });
+      return res.status(200).json({
+        message: "Proposta rejeitada com sucesso!",
+        proposta: rejectedProposta,
+      });
     } catch (error) {
       console.error("Erro ao rejeitar proposta:", error);
       if (error.code === "P2025") {
@@ -420,11 +398,9 @@ class PropostaController {
         proposta.itemDesejado.usuarioId !== userId &&
         !req.isAdmin
       ) {
-        return res
-          .status(403)
-          .json({
-            message: "Você não tem permissão para deletar esta proposta.",
-          });
+        return res.status(403).json({
+          message: "Você não tem permissão para deletar esta proposta.",
+        });
       }
 
       // 2. Deletar a proposta
@@ -495,6 +471,92 @@ class PropostaController {
       return res
         .status(500)
         .json({ message: "Erro interno do servidor ao buscar histórico." });
+    }
+  }
+
+  // Buscar propostas recebidas (onde o usuário é dono do item desejado)
+  async getReceivedProposals(req, res) {
+    const usuarioId = req.userId;
+
+    try {
+      const propostas = await prisma.proposta.findMany({
+        where: {
+          itemDesejado: {
+            usuarioId: usuarioId,
+          },
+        },
+        include: {
+          itemOfertado: {
+            include: {
+              usuario: {
+                select: { id: true, nome: true, email: true },
+              },
+            },
+          },
+          itemDesejado: {
+            include: {
+              usuario: {
+                select: { id: true, nome: true, email: true },
+              },
+            },
+          },
+          ofertante: {
+            select: { id: true, nome: true, email: true },
+          },
+        },
+        orderBy: { createdAt: "desc" },
+      });
+
+      return res.status(200).json(propostas);
+    } catch (error) {
+      console.error("Erro ao buscar propostas recebidas:", error);
+      return res
+        .status(500)
+        .json({
+          message: "Erro interno do servidor ao buscar propostas recebidas.",
+        });
+    }
+  }
+
+  // Buscar propostas enviadas (onde o usuário é o ofertante)
+  async getSentProposals(req, res) {
+    const usuarioId = req.userId;
+
+    try {
+      const propostas = await prisma.proposta.findMany({
+        where: {
+          ofertanteId: usuarioId,
+        },
+        include: {
+          itemOfertado: {
+            include: {
+              usuario: {
+                select: { id: true, nome: true, email: true },
+              },
+            },
+          },
+          itemDesejado: {
+            include: {
+              usuario: {
+                select: { id: true, nome: true, email: true },
+              },
+            },
+          },
+          ofertante: {
+            select: { id: true, nome: true, email: true },
+          },
+        },
+        orderBy: { createdAt: "desc" },
+      });
+
+      return res.status(200).json(propostas);
+    } catch (error) {
+      console.error("Erro ao buscar propostas enviadas:", error);
+      return res
+        .status(500)
+        .json({
+          message: "Erro interno do servidor ao buscar propostas enviadas.",
+        });
     }
   }
 }

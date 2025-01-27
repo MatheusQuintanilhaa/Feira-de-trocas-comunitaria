@@ -201,11 +201,9 @@ class ItemController {
       }
 
       if (existingItem.usuarioId !== usuarioId) {
-        return res
-          .status(403)
-          .json({
-            message: "Você não tem permissão para atualizar este item.",
-          });
+        return res.status(403).json({
+          message: "Você não tem permissão para atualizar este item.",
+        });
       }
 
       // 2. Atualizar o item
@@ -284,12 +282,10 @@ class ItemController {
       }
       // Se houver propostas associadas, o Prisma pode retornar um erro de Foreign Key
       if (error.code === "P2003") {
-        return res
-          .status(409)
-          .json({
-            message:
-              "Não é possível deletar o item, pois ele está associado a uma ou mais propostas de troca.",
-          });
+        return res.status(409).json({
+          message:
+            "Não é possível deletar o item, pois ele está associado a uma ou mais propostas de troca.",
+        });
       }
       console.error("Erro ao deletar item:", error);
       return res
@@ -370,6 +366,39 @@ class ItemController {
       return res
         .status(500)
         .json({ message: "Erro interno do servidor ao buscar estatísticas." });
+    }
+  }
+
+  // Buscar itens do usuário logado
+  async getMyItems(req, res) {
+    const usuarioId = req.userId; // ID do usuário autenticado
+
+    try {
+      const items = await prisma.item.findMany({
+        where: {
+          usuarioId: usuarioId,
+        },
+        select: {
+          id: true,
+          nome: true,
+          descricao: true,
+          categoria: true,
+          imagemUrl: true,
+          disponivelParaTroca: true,
+          usuarioId: true,
+          usuario: {
+            select: { id: true, nome: true, email: true },
+          },
+          createdAt: true,
+          updatedAt: true,
+        },
+        orderBy: { createdAt: "desc" },
+      });
+
+      return res.status(200).json(items);
+    } catch (error) {
+      console.error("Erro ao buscar itens do usuário:", error);
+      return res.status(500).json({ message: "Erro interno do servidor." });
     }
   }
 }
