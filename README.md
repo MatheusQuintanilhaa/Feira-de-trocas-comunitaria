@@ -24,12 +24,22 @@ Desenvolver uma aplicação web que permita:
 
 ## 🚀 Tecnologias Utilizadas
 
+### 🔧 Backend
+
 - **[Node.js](https://nodejs.org/)** - Runtime JavaScript
 - **[Express.js](https://expressjs.com/)** - Framework web
 - **[Prisma ORM](https://prisma.io/)** - Object-Relational Mapping
 - **[PostgreSQL](https://postgresql.org/)** - Banco de dados relacional
 - **[JWT](https://jwt.io/)** - Autenticação segura
 - **[bcryptjs](https://www.npmjs.com/package/bcryptjs)** - Criptografia de senhas
+
+### 🎨 Frontend
+
+- **[React](https://reactjs.org/)** - Biblioteca para interfaces
+- **[Vite](https://vitejs.dev/)** - Build tool e dev server
+- **[Tailwind CSS](https://tailwindcss.com/)** - Framework CSS utilitário
+- **[React Router](https://reactrouter.com/)** - Roteamento SPA
+- **[Axios](https://axios-http.com/)** - Cliente HTTP
 
 ---
 
@@ -51,7 +61,7 @@ Desenvolver uma aplicação web que permita:
    cd feira-trocas-backend
    ```
 
-2. **Instale as dependências:**
+2. **Instale as dependências do backend:**
 
    ```bash
    npm install
@@ -77,13 +87,28 @@ Desenvolver uma aplicação web que permita:
    npx prisma generate
    ```
 
-5. **Inicie o servidor:**
+5. **Inicie o servidor backend:**
 
    ```bash
    npm start
    ```
 
-🎉 **Servidor rodando em:** `http://localhost:8080`
+6. **Configure o frontend (em outro terminal):**
+
+   ```bash
+   # Entre na pasta do frontend
+   cd frontend
+
+   # Instale as dependências
+   npm install
+
+   # Inicie o servidor de desenvolvimento
+   npm run dev
+   ```
+
+🎉 **Aplicação completa rodando:**
+- **Backend:** `http://localhost:8080`
+- **Frontend:** `http://localhost:5173`
 
 ---
 
@@ -399,7 +424,22 @@ Relacionamentos:
 
 ## 🧪 Testando a API
 
-### 🔑 1. Primeiro, crie um usuário
+### � Interface Web (Frontend)
+
+A aplicação possui uma interface web completa desenvolvida em React. Para usar:
+
+1. **Acesse o frontend:** `http://localhost:5173`
+2. **Registre-se** ou **faça login**
+3. **Navegue pelas funcionalidades:**
+   - 📋 **Home**: Visualizar todos os itens disponíveis
+   - 📦 **Meus Itens**: Gerenciar seus próprios itens
+   - ➕ **Criar Item**: Cadastrar novos itens para troca
+   - ✏️ **Editar Item**: Modificar itens existentes
+   - 🤝 **Propostas**: Visualizar e gerenciar propostas
+
+### 🔧 Testando Endpoints Manualmente
+
+### �🔑 1. Primeiro, crie um usuário
 
 ```bash
 POST http://localhost:8080/users
@@ -449,6 +489,8 @@ Authorization: Bearer SEU_TOKEN_AQUI
 
 ## 📊 Scripts Disponíveis
 
+### 🔧 Scripts do Backend
+
 | Script              | Comando                    | Descrição                   |
 | ------------------- | -------------------------- | --------------------------- |
 | **Desenvolvimento** | `npm start`                | Inicia servidor com nodemon |
@@ -457,26 +499,43 @@ Authorization: Bearer SEU_TOKEN_AQUI
 | **Gerar Cliente**   | `npx prisma generate`      | Gera o cliente Prisma       |
 | **Reset DB**        | `npx prisma migrate reset` | Reseta o banco (cuidado!)   |
 
+### 🎨 Scripts do Frontend
+
+| Script              | Comando                    | Descrição                   |
+| ------------------- | -------------------------- | --------------------------- |
+| **Desenvolvimento** | `npm run dev`              | Inicia servidor Vite        |
+| **Build Produção**  | `npm run build`            | Gera build otimizado        |
+| **Preview**         | `npm run preview`          | Visualiza build de produção |
+| **Lint**            | `npm run lint`             | Executa ESLint              |
+
 ---
 
 ## 📁 Estrutura do Projeto
 
 ```javascript
 feira-trocas-backend/
-├── 📁 src/
+├── 📁 src/                  # 🔧 Backend
 │   ├── 📁 controllers/      # 🧠 Lógica de negócio
 │   ├── 📁 middlewares/      # 🔒 Autenticação e autorização
 │   ├── 📁 routes/           # 🛣️ Definição das rotas
-│   ├── 📄 app.js           # ⚙️ Configuração do Express
-│   └── 📄 db.js            # 🗄️ Configuração do Prisma
+│   └── 📄 app.js           # ⚙️ Configuração do Express
+├── 📁 frontend/             # 🎨 Frontend React
+│   ├── 📁 src/
+│   │   ├── 📁 components/   # 🧩 Componentes reutilizáveis
+│   │   ├── 📁 pages/        # 📄 Páginas da aplicação
+│   │   ├── 📁 contexts/     # 🔄 Context API (autenticação)
+│   │   ├── 📁 services/     # 🌐 Comunicação com API
+│   │   └── 📄 App.jsx      # 🏠 Componente principal
+│   ├── 📄 index.html       # � Template HTML
+│   ├── 📄 vite.config.js   # ⚙️ Configuração do Vite
+│   └── 📄 tailwind.config.js # 🎨 Configuração do Tailwind
 ├── 📁 prisma/
 │   ├── 📄 schema.prisma    # 🏗️ Schema do banco de dados
 │   └── 📁 migrations/      # 🔄 Arquivos de migração
 ├── 📁 generated/           # 🤖 Cliente Prisma gerado
-├── 📄 package.json         # 📦 Dependências do projeto
+├── 📄 package.json         # 📦 Dependências do backend
 ├── 📄 .env.example         # 🔧 Exemplo de configuração
 └── 📄 README.md           # 📖 Documentação
-
 ```
 
 ---
@@ -503,9 +562,13 @@ Em muitas comunidades, moradores acumulam itens em bom estado que não usam mais
 ## 🛡️ Status do Projeto
 
 - ✅ **Backend Completo** - Todas as funcionalidades implementadas
-- ✅ **Documentação** - README detalhado
+- ✅ **Frontend Completo** - Interface React funcional
+- ✅ **Sistema de Autenticação** - Login/logout com JWT
+- ✅ **CRUD de Itens** - Criar, listar, editar e deletar itens
+- ✅ **Sistema de Propostas** - Criar e gerenciar propostas de troca
+- ✅ **Filtros e Busca** - Filtrar por categoria e buscar por texto
+- ✅ **Documentação** - README detalhado e guia do Postman
 - ✅ **Testes Manuais** - Endpoints validados
-- ✅ **Estrutura Profissional** - Código organizado e comentado
-- ⏳ **Frontend** - A ser desenvolvido
+- ✅ **Estrutura Profissional** - Código organizado e limpo
 
 ---
