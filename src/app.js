@@ -5,7 +5,7 @@ const express = require('express');
 const { PrismaClient } = require('../generated/prisma');
 
 const app = express();
-const PORT = process.env.PORT || 8080; // Define a porta, padrão 3000
+const PORT = process.env.PORT || 8080; // Define a porta, padrão 8080
 // Inicialize o PrismaClient
 const prisma = new PrismaClient();
 
@@ -16,9 +16,6 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.send('Bem-vindo à API da Feira de Trocas Comunitária!');
 });
-
-
-
 
 // Inicia o servidor
 app.listen(PORT, () => {
