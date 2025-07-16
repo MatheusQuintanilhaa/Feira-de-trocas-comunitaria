@@ -1,6 +1,8 @@
 // src/controllers/propostaController.js
 
-import prisma from "../db.js"; // Importa a instância do Prisma
+import { PrismaClient } from "../../generated/prisma/index.js"; // Importa a instância do Prisma
+
+const prisma = new PrismaClient();
 
 class PropostaController {
   // Criar uma nova proposta de troca

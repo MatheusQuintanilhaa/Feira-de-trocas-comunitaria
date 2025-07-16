@@ -1,6 +1,8 @@
 // src/controllers/itemController.js
 
-import prisma from "../db.js"; // Importa a instância do Prisma
+import { PrismaClient } from "../../generated/prisma/index.js"; // Importa a instância do Prisma
+
+const prisma = new PrismaClient();
 
 // Categorias permitidas (pode ser movido para um arquivo de configuração)
 const CATEGORIAS_PERMITIDAS = [

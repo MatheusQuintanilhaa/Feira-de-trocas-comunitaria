@@ -2,13 +2,12 @@
 
 import { Router } from "express";
 import propostaController from "../controllers/propostaController.js";
-import authentication from "../middlewares/authentication.js"; // Para proteger as rotas
-import authorization from "../middlewares/authorization.js"; // Para rotas de admin
+import authenticate from "../../middlewares/authenticate.js"; // Para proteger as rotas
 
 const router = Router();
 
 // Todas as rotas de proposta exigem autenticação
-router.use(authentication); // Aplica o middleware de autenticação a todas as rotas deste router
+router.use(authenticate); // Aplica o middleware de autenticação a todas as rotas deste router
 
 // Criar uma nova proposta
 router.post("/", propostaController.createProposta);
