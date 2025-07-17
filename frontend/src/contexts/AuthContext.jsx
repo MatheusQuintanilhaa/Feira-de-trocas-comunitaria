@@ -1,23 +1,19 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { authService } from "../services/apiServices";
 
-const AuthContext = createContext();
+// eslint-disable-next-line react-refresh/only-export-components
+export const AuthContext = createContext();
 
-const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth deve ser usado dentro de um AuthProvider");
-  }
-  return context;
-};
-
-const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }) => {
+  const [userId, setUserId] = useState(localStorage.getItem("id"));
+  const [token, setToken] = useState(localStorage.getItem("token"));
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     const savedUser = localStorage.getItem("user");
+    const savedId = localStorage.getItem("id");
 
     if (token && savedUser && token.trim() !== "") {
       try {
@@ -29,15 +25,19 @@ const AuthProvider = ({ children }) => {
           parsedUser.email
         ) {
           setUser(parsedUser);
+          setUserId(savedId || parsedUser.id);
+          setToken(token);
         } else {
           console.warn("Dados de usuário inválidos no localStorage");
           localStorage.removeItem("token");
           localStorage.removeItem("user");
+          localStorage.removeItem("id");
         }
       } catch (error) {
         console.error("Erro ao recuperar dados do usuário:", error);
         localStorage.removeItem("token");
         localStorage.removeItem("user");
+        localStorage.removeItem("id");
       }
     }
     setLoading(false);
@@ -47,6 +47,17 @@ const AuthProvider = ({ children }) => {
     try {
       const response = await authService.login(email, senha);
 
+      setUserId(response.id);
+      setToken(response.token);
+
+      setUser({
+        id: response.id,
+        nome: response.nome,
+        email: response.email,
+        isAdmin: response.isAdmin,
+      });
+
+      localStorage.setItem("id", response.id);
       localStorage.setItem("token", response.token);
       localStorage.setItem(
         "user",
@@ -57,13 +68,6 @@ const AuthProvider = ({ children }) => {
           isAdmin: response.isAdmin,
         })
       );
-
-      setUser({
-        id: response.id,
-        nome: response.nome,
-        email: response.email,
-        isAdmin: response.isAdmin,
-      });
 
       return { success: true };
     } catch (error) {
@@ -96,21 +100,29 @@ const AuthProvider = ({ children }) => {
 
   const logout = () => {
     try {
+      setUserId(null);
+      setToken(null);
+      setUser(null);
+
+      localStorage.removeItem("id");
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      setUser(null);
     } catch (error) {
       console.error("Erro ao fazer logout:", error);
+      setUserId(null);
+      setToken(null);
       setUser(null);
     }
   };
 
   const isAuthenticated = () => {
     const token = localStorage.getItem("token");
-    return user !== null && token !== null && token.trim() !== "";
+    return userId !== null && token !== null && token.trim() !== "";
   };
 
   const value = {
+    userId,
+    token,
     user,
     login,
     register,
@@ -123,4 +135,4 @@ const AuthProvider = ({ children }) => {
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
-export { AuthContext, useAuth, AuthProvider };
+export const useAuth = () => useContext(AuthContext);
