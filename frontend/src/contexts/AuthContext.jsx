@@ -19,9 +19,21 @@ const AuthProvider = ({ children }) => {
     const token = localStorage.getItem("token");
     const savedUser = localStorage.getItem("user");
 
-    if (token && savedUser) {
+    if (token && savedUser && token.trim() !== "") {
       try {
-        setUser(JSON.parse(savedUser));
+        const parsedUser = JSON.parse(savedUser);
+        if (
+          parsedUser &&
+          parsedUser.id &&
+          parsedUser.nome &&
+          parsedUser.email
+        ) {
+          setUser(parsedUser);
+        } else {
+          console.warn("Dados de usuário inválidos no localStorage");
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+        }
       } catch (error) {
         console.error("Erro ao recuperar dados do usuário:", error);
         localStorage.removeItem("token");
@@ -83,13 +95,19 @@ const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setUser(null);
+    try {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      setUser(null);
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+      setUser(null);
+    }
   };
 
   const isAuthenticated = () => {
-    return user !== null && localStorage.getItem("token") !== null;
+    const token = localStorage.getItem("token");
+    return user !== null && token !== null && token.trim() !== "";
   };
 
   const value = {
@@ -104,4 +122,5 @@ const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { AuthContext, useAuth, AuthProvider };
