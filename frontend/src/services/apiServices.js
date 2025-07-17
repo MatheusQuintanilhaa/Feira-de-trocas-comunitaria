@@ -1,129 +1,118 @@
-import api from './api';
+import api from "./api";
 
 export const authService = {
-  // Login de usuário
   login: async (email, senha) => {
-    const response = await api.post('/login', { email, senha });
+    const response = await api.post("/api/users/login", { email, senha });
+    return response.data;
+  },
+
+  register: async (nome, email, senha) => {
+    const response = await api.post("/api/users/register", {
+      nome,
+      email,
+      senha,
+    });
     return response.data;
   },
 };
 
 export const userService = {
-  // Criar usuário
   createUser: async (userData) => {
-    const response = await api.post('/users', userData);
+    const response = await api.post("/api/users", userData);
     return response.data;
   },
 
-  // Buscar todos os usuários
   getAllUsers: async () => {
-    const response = await api.get('/users');
+    const response = await api.get("/api/users");
     return response.data;
   },
 
-  // Buscar usuário por ID
   getUserById: async (id) => {
-    const response = await api.get(`/users/${id}`);
+    const response = await api.get(`/api/users/${id}`);
     return response.data;
   },
 
-  // Atualizar usuário
   updateUser: async (id, userData) => {
-    const response = await api.put(`/users/${id}`, userData);
+    const response = await api.put(`/api/users/${id}`, userData);
     return response.data;
   },
 
-  // Deletar usuário
   deleteUser: async (id) => {
-    const response = await api.delete(`/users/${id}`);
+    const response = await api.delete(`/api/users/${id}`);
     return response.data;
   },
 };
 
 export const itemService = {
-  // Buscar todos os itens
   getAllItems: async () => {
-    const response = await api.get('/items');
+    const response = await api.get("/api/items");
     return response.data;
   },
 
-  // Buscar item por ID
   getItemById: async (id) => {
-    const response = await api.get(`/items/${id}`);
+    const response = await api.get(`/api/items/${id}`);
     return response.data;
   },
 
-  // Criar item
   createItem: async (itemData) => {
-    const response = await api.post('/items', itemData);
+    const response = await api.post("/api/items", itemData);
     return response.data;
   },
 
-  // Atualizar item
   updateItem: async (id, itemData) => {
-    const response = await api.put(`/items/${id}`, itemData);
+    const response = await api.put(`/api/items/${id}`, itemData);
     return response.data;
   },
 
-  // Deletar item
   deleteItem: async (id) => {
-    const response = await api.delete(`/items/${id}`);
+    const response = await api.delete(`/api/items/${id}`);
     return response.data;
   },
 
-  // Buscar itens por categoria
   getItemsByCategory: async (categoria) => {
-    const response = await api.get(`/items?categoria=${categoria}`);
+    const response = await api.get(`/api/items?categoria=${categoria}`);
     return response.data;
   },
 
-  // Buscar itens do usuário logado
   getMyItems: async () => {
-    const response = await api.get('/items/my-items');
+    const response = await api.get("/api/items/my-items");
     return response.data;
   },
 };
 
 export const proposalService = {
-  // Buscar todas as propostas
   getAllProposals: async () => {
-    const response = await api.get('/proposals');
+    const response = await api.get("/api/propostas");
     return response.data;
   },
 
-  // Buscar proposta por ID
   getProposalById: async (id) => {
-    const response = await api.get(`/proposals/${id}`);
+    const response = await api.get(`/api/propostas/${id}`);
     return response.data;
   },
 
-  // Criar proposta
   createProposal: async (proposalData) => {
-    const response = await api.post('/proposals', proposalData);
+    const response = await api.post("/api/propostas", proposalData);
     return response.data;
   },
 
-  // Aceitar proposta
   acceptProposal: async (id) => {
-    const response = await api.put(`/proposals/${id}/accept`);
+    const response = await api.put(`/api/propostas/${id}/accept`);
     return response.data;
   },
 
-  // Recusar proposta
   rejectProposal: async (id) => {
-    const response = await api.put(`/proposals/${id}/reject`);
+    const response = await api.put(`/api/propostas/${id}/reject`);
     return response.data;
   },
 
-  // Buscar propostas recebidas
   getReceivedProposals: async () => {
-    const response = await api.get('/proposals/received');
+    const response = await api.get("/api/propostas/received");
     return response.data;
   },
 
-  // Buscar propostas enviadas
   getSentProposals: async () => {
-    const response = await api.get('/proposals/sent');
+    const response = await api.get("/api/propostas/sent");
     return response.data;
   },
 };
