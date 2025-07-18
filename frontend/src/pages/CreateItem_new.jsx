@@ -65,53 +65,52 @@ const CreateItem = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Criar Novo Item
-          </h1>
-          <p className="text-gray-600">
-            Cadastre um item que você gostaria de trocar.
-          </p>
-        </div>
-
+      <div className="max-w-2xl mx-auto px-4">
         <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+            Criar Novo Item
+          </h2>
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label
-                htmlFor="nome"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Nome do Item *
               </label>
               <input
                 type="text"
-                id="nome"
-                name="nome"
                 value={form.nome}
                 onChange={(e) => setForm({ ...form, nome: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
-                placeholder="Ex: iPhone 12, Livro de Programação, Bicicleta..."
               />
             </div>
 
             <div>
-              <label
-                htmlFor="categoria"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Descrição *
+              </label>
+              <textarea
+                value={form.descricao}
+                onChange={(e) =>
+                  setForm({ ...form, descricao: e.target.value })
+                }
+                rows={4}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Categoria *
               </label>
               <select
-                id="categoria"
-                name="categoria"
                 value={form.categoria}
                 onChange={(e) =>
                   setForm({ ...form, categoria: e.target.value })
                 }
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
               >
                 <option value="">Selecione uma categoria</option>
                 {categories.map((category) => (
@@ -123,60 +122,31 @@ const CreateItem = () => {
             </div>
 
             <div>
-              <label
-                htmlFor="descricao"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Descrição *
-              </label>
-              <textarea
-                id="descricao"
-                name="descricao"
-                value={form.descricao}
-                onChange={(e) =>
-                  setForm({ ...form, descricao: e.target.value })
-                }
-                required
-                rows={4}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
-                placeholder="Descreva o item, seu estado de conservação, características importantes..."
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="imagem"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 URL da Imagem
               </label>
               <input
                 type="url"
-                id="imagem"
-                name="imagem"
                 value={form.imagem}
                 onChange={(e) => setForm({ ...form, imagem: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 placeholder="https://exemplo.com/imagem.jpg"
               />
-              <p className="text-sm text-gray-500 mt-1">
-                Link para uma imagem do item (opcional)
-              </p>
             </div>
 
-            <div className="flex space-x-4 pt-6">
+            <div className="flex gap-4">
+              <button
+                type="submit"
+                className="flex-1 bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 transition-colors font-medium"
+              >
+                Criar Item
+              </button>
               <button
                 type="button"
                 onClick={() => navigate("/my-items")}
-                className="flex-1 bg-gray-300 text-gray-700 py-3 px-4 rounded-md hover:bg-gray-400 transition-colors"
+                className="flex-1 bg-gray-600 text-white py-3 px-4 rounded-md hover:bg-gray-700 transition-colors font-medium"
               >
                 Cancelar
-              </button>
-              <button
-                type="submit"
-                className="flex-1 py-3 px-4 rounded-md font-medium transition-colors bg-green-600 text-white hover:bg-green-700"
-              >
-                Criar Item
               </button>
             </div>
           </form>

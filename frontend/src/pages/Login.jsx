@@ -1,37 +1,23 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import { sign } from "../services/apiServices";
 
 const Login = () => {
-  const [formData, setFormData] = useState({
+  const navigate = useNavigate();
+  const [form, setForm] = useState({
     email: "",
     senha: "",
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const { login } = useAuth();
-  const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
 
-    try {
-      await login(formData.email, formData.senha);
+    const response = await sign(form);
+
+    if (response.data.token) {
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
       navigate("/items");
-    } catch (err) {
-      setError(err.message || "Erro ao fazer login");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -59,12 +45,6 @@ const Login = () => {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="card px-4 py-8 sm:px-10">
-          {error && (
-            <div className="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
-              {error}
-            </div>
-          )}
-
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label
@@ -80,8 +60,8 @@ const Login = () => {
                   type="email"
                   autoComplete="email"
                   required
-                  value={formData.email}
-                  onChange={handleChange}
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
                   className="input-field"
                   placeholder="seu@email.com"
                 />
@@ -102,8 +82,8 @@ const Login = () => {
                   type="password"
                   autoComplete="current-password"
                   required
-                  value={formData.senha}
-                  onChange={handleChange}
+                  value={form.senha}
+                  onChange={(e) => setForm({ ...form, senha: e.target.value })}
                   className="input-field"
                   placeholder="••••••••"
                 />
@@ -113,21 +93,9 @@ const Login = () => {
             <div>
               <button
                 type="submit"
-                disabled={loading}
-                className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white ${
-                  loading
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                } transition-colors duration-200`}
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"
               >
-                {loading ? (
-                  <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Entrando...
-                  </div>
-                ) : (
-                  "Entrar"
-                )}
+                Entrar
               </button>
             </div>
           </form>
