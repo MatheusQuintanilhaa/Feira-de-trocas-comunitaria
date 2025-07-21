@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { sign } from "../services/apiServices";
+import { AuthContext } from "../contexts/AuthContext";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
   const [form, setForm] = useState({
     email: "",
     senha: "",
@@ -11,23 +13,16 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await sign(form);
-
-      if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            id: response.data.id,
-            nome: response.data.nome,
-            email: response.data.email,
-            isAdmin: response.data.isAdmin,
-          })
-        );
-        localStorage.setItem("id", response.data.id);
+      // Chama o login do contexto, que já atualiza o estado global
+      const loginResult = await login(form.email, form.senha);
+      if (loginResult && loginResult.success) {
         navigate("/items");
+      } else {
+        alert(
+          "Erro ao fazer login: " +
+            (loginResult?.message || "Credenciais inválidas")
+        );
       }
     } catch (error) {
       alert(
