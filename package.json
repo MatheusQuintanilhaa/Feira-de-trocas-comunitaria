@@ -1,5 +1,5 @@
 {
-  "name": "feira-trocas-backend",
+  "name": "feira-trocas-fullstack",
   "version": "1.0.0",
   "description": "API REST para plataforma de trocas comunitárias - Promovendo o consumo consciente",
   "main": "src/app.js",
