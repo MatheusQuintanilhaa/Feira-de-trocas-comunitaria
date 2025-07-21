@@ -289,13 +289,13 @@ feira-trocas-backend/
 │   ├── 📁 routes/           # 🛣️ Definição das rotas
 │   └── 📄 app.js           # ⚙️ Configuração do Express
 ├── 📁 frontend/             # 🎨 Frontend React
-│   ├── �� src/
+│   ├── 📁 src/             # Código-fonte do frontend
 │   │   ├── 📁 components/   # 🧩 Componentes reutilizáveis
 │   │   ├── 📁 pages/        # 📄 Páginas da aplicação
 │   │   ├── 📁 contexts/     # 🔄 Context API (autenticação)
 │   │   ├── 📁 services/     # 🌐 Comunicação com API
-│   │   └── �� App.jsx      # 🏠 Componente principal
-│   ├── �� index.html       # 🌐 Template HTML
+│   │   └── 🏠 App.jsx       # Componente principal
+│   ├── 🌐 index.html        # Template HTML
 │   ├── 📄 vite.config.js   # ⚙️ Configuração do Vite
 │   └── 📄 tailwind.config.js # 🎨 Configuração do Tailwind
 ├── 📁 prisma/
