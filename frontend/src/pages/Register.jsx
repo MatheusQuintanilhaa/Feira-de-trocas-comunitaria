@@ -24,15 +24,22 @@ const Register = () => {
       return;
     }
 
-    await registerUser({
-      nome: form.nome,
-      email: form.email,
-      senha: form.senha,
-    });
+    try {
+      await registerUser({
+        nome: form.nome,
+        email: form.email,
+        senha: form.senha,
+      });
 
-    navigate("/login");
+      alert("Conta criada com sucesso!");
+      navigate("/login");
+    } catch (error) {
+      alert(
+        "Erro ao criar conta: " +
+          (error.response?.data?.message || "Erro desconhecido")
+      );
+    }
   };
-
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">

@@ -101,6 +101,13 @@ Desenvolver uma aplicação web que permita:
 
 ---
 
+## 🆕 Principais Atualizações
+
+- As propostas agora exibem nomes dos itens e usuários envolvidos, tornando a visualização mais clara e amigável.
+- O backend foi corrigido para evitar erros internos ao criar propostas (campo inexistente removido).
+- As regras de negócio de propostas estão documentadas e validadas: não é possível propor para si mesmo, só é possível propor com itens disponíveis, e apenas o dono do item ofertado pode iniciar uma proposta.
+- O fluxo de troca pode ser testado facilmente pelo frontend ou via API (veja abaixo).
+
 ## 🔧 Funcionalidades
 
 ### 🏗️ Entidades do Sistema
@@ -147,16 +154,19 @@ O diagrama abaixo representa a estrutura do banco de dados e os relacionamentos 
 ### 🔗 Explicação dos Relacionamentos
 
 #### **1. Usuario ↔ Item (1:N)**
+
 - **Relacionamento**: Um usuário pode **TER** vários itens
 - **Cardinalidade**: 1 para N (um-para-muitos)
 - **Chave Estrangeira**: `usuarioId` na tabela `Item`
 
 #### **2. Item ↔ Proposta (1:N) - Item Ofertado**
+
 - **Relacionamento**: Um item pode ser **OFERTADO** em várias propostas
 - **Cardinalidade**: 1 para N
 - **Chave Estrangeira**: `itemOfertadoId` na tabela `Proposta`
 
 #### **3. Item ↔ Proposta (1:N) - Item Desejado**
+
 - **Relacionamento**: Um item pode ser **DESEJADO** em várias propostas
 - **Cardinalidade**: 1 para N
 - **Chave Estrangeira**: `itemDesejadoId` na tabela `Proposta`
@@ -177,6 +187,14 @@ Para informações detalhadas sobre todos os endpoints da API, consulte o **[Gui
 
 ## 🧪 Testando a API
 
+### 🎨 Testando o Fluxo de Propostas
+
+1. Cadastre dois usuários e faça login com cada um.
+2. Cada usuário deve cadastrar pelo menos um item disponível para troca.
+3. Um usuário pode propor troca entre seu item e o item de outro usuário.
+4. O sistema valida automaticamente as regras de negócio e exibe mensagens detalhadas em caso de erro.
+5. As propostas aparecem com nomes dos itens e usuários envolvidos, status e data.
+
 ### 🎨 Interface Web (Frontend)
 
 A aplicação possui uma interface web completa desenvolvida em React. Para usar:
@@ -188,11 +206,17 @@ A aplicação possui uma interface web completa desenvolvida em React. Para usar
    - 📦 **Meus Itens**: Gerenciar seus próprios itens
    - ➕ **Criar Item**: Cadastrar novos itens para troca
    - ✏️ **Editar Item**: Modificar itens existentes
-   - 🤝 **Propostas**: Visualizar e gerenciar propostas
+   - 🤝 **Propostas**: Visualizar e gerenciar propostas (agora com nomes dos itens e usuários)
 
-### 🔧 Testando Endpoints Manualmente
+### 🔧 Testando Regras de Negócio
+
+- Não é possível propor troca para o próprio item.
+- Só é possível propor troca se ambos os itens estiverem disponíveis.
+- Apenas o dono do item ofertado pode iniciar uma proposta.
+- O sistema exibe mensagens detalhadas em caso de erro.
 
 #### 🔑 1. Primeiro, crie um usuário
+
 ```bash
 POST http://localhost:8080/api/users/register
 Content-Type: application/json
@@ -205,6 +229,7 @@ Content-Type: application/json
 ```
 
 #### 🔐 2. Faça login para obter o token
+
 ```bash
 POST http://localhost:8080/api/users/login
 Content-Type: application/json
@@ -215,7 +240,8 @@ Content-Type: application/json
 }
 ```
 
-#### �� 3. Criar um item (use o token no header)
+#### 📦 3. Criar um item (use o token no header)
+
 ```bash
 POST http://localhost:8080/api/items
 Authorization: Bearer SEU_TOKEN_AQUI
@@ -234,21 +260,21 @@ Content-Type: application/json
 
 ### 🔧 Scripts do Backend
 
-| Script              | Comando                    | Descrição                   |
-| ------------------- | -------------------------- | --------------------------- |
-| **Desenvolvimento** | `npm start`                | Inicia servidor com nodemon |
-| **Prisma Studio**   | `npx prisma studio`        | Interface visual do banco   |
-| **Migrações**       | `npx prisma migrate dev`   | Executa migrações pendentes |
-| **Gerar Cliente**   | `npx prisma generate`      | Gera o cliente Prisma       |
+| Script              | Comando                  | Descrição                   |
+| ------------------- | ------------------------ | --------------------------- |
+| **Desenvolvimento** | `npm start`              | Inicia servidor com nodemon |
+| **Prisma Studio**   | `npx prisma studio`      | Interface visual do banco   |
+| **Migrações**       | `npx prisma migrate dev` | Executa migrações pendentes |
+| **Gerar Cliente**   | `npx prisma generate`    | Gera o cliente Prisma       |
 
 ### 🎨 Scripts do Frontend
 
-| Script              | Comando                    | Descrição                   |
-| ------------------- | -------------------------- | --------------------------- |
-| **Desenvolvimento** | `npm run dev`              | Inicia servidor Vite        |
-| **Build Produção**  | `npm run build`            | Gera build otimizado        |
-| **Preview**         | `npm run preview`          | Visualiza build de produção |
-| **Lint**            | `npm run lint`             | Executa ESLint              |
+| Script              | Comando           | Descrição                   |
+| ------------------- | ----------------- | --------------------------- |
+| **Desenvolvimento** | `npm run dev`     | Inicia servidor Vite        |
+| **Build Produção**  | `npm run build`   | Gera build otimizado        |
+| **Preview**         | `npm run preview` | Visualiza build de produção |
+| **Lint**            | `npm run lint`    | Executa ESLint              |
 
 ---
 

@@ -46,10 +46,16 @@ const EditItem = () => {
 
     if (!user) return;
 
-    await updateItem(id, form);
-    navigate("/my-items");
+    try {
+      await updateItem(id, form);
+      navigate("/my-items");
+    } catch (error) {
+      alert(
+        "Erro ao atualizar item: " +
+          (error.response?.data?.message || "Erro desconhecido")
+      );
+    }
   };
-
   if (!user) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">

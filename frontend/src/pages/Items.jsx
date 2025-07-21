@@ -99,7 +99,10 @@ const Items = () => {
       alert("Proposta enviada com sucesso!");
     } catch (err) {
       console.error("Erro ao criar proposta:", err);
-      alert("Erro ao enviar proposta. Tente novamente.");
+      alert(
+        "Erro ao enviar proposta: " +
+          (err.response?.data?.message || "Tente novamente.")
+      );
     } finally {
       setProposalLoading(false);
     }
@@ -198,9 +201,9 @@ const Items = () => {
                 className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
               >
                 <div className="h-48 bg-gray-200 flex items-center justify-center">
-                  {item.imagem ? (
+                  {item.imagemUrl ? (
                     <img
-                      src={item.imagem}
+                      src={item.imagemUrl}
                       alt={item.nome}
                       className="h-full w-full object-cover"
                     />

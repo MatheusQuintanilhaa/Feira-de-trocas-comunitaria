@@ -71,7 +71,6 @@ class PropostaController {
           itemOfertadoId,
           itemDesejadoId,
           ofertanteId,
-          donoItemDesejadoId, // <--- ADICIONADO: Novo campo para o ID do dono do item desejado
           status: "pendente", // Status inicial
         },
         select: {
@@ -94,7 +93,6 @@ class PropostaController {
             },
           },
           ofertante: { select: { id: true, nome: true } },
-          donoItemDesejado: { select: { id: true, nome: true } }, // <--- ADICIONADO: Para ver quem é o dono na resposta
         },
       });
       return res.status(201).json(newProposta);
@@ -510,11 +508,9 @@ class PropostaController {
       return res.status(200).json(propostas);
     } catch (error) {
       console.error("Erro ao buscar propostas recebidas:", error);
-      return res
-        .status(500)
-        .json({
-          message: "Erro interno do servidor ao buscar propostas recebidas.",
-        });
+      return res.status(500).json({
+        message: "Erro interno do servidor ao buscar propostas recebidas.",
+      });
     }
   }
 
@@ -552,11 +548,9 @@ class PropostaController {
       return res.status(200).json(propostas);
     } catch (error) {
       console.error("Erro ao buscar propostas enviadas:", error);
-      return res
-        .status(500)
-        .json({
-          message: "Erro interno do servidor ao buscar propostas enviadas.",
-        });
+      return res.status(500).json({
+        message: "Erro interno do servidor ao buscar propostas enviadas.",
+      });
     }
   }
 }

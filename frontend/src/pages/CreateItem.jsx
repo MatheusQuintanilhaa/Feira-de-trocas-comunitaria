@@ -30,18 +30,24 @@ const CreateItem = () => {
 
     if (!user) return;
 
-    const itemData = {
-      nome: form.nome,
-      descricao: form.descricao,
-      categoria: form.categoria,
-      imagemUrl: form.imagem || null,
-      disponivelParaTroca: true,
-    };
+    try {
+      const itemData = {
+        nome: form.nome,
+        descricao: form.descricao,
+        categoria: form.categoria,
+        imagemUrl: form.imagem || null,
+        disponivelParaTroca: true,
+      };
 
-    await createItem(itemData);
-    navigate("/my-items");
+      await createItem(itemData);
+      navigate("/my-items");
+    } catch (error) {
+      alert(
+        "Erro ao criar item: " +
+          (error.response?.data?.message || "Erro desconhecido")
+      );
+    }
   };
-
   if (!user) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">

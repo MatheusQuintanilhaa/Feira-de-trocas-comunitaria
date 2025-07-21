@@ -157,7 +157,8 @@ const Proposals = () => {
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-2">
                       <h3 className="text-lg font-semibold text-gray-900">
-                        Proposta #{proposal.id}
+                        {proposal.itemOfertado?.nome} →{" "}
+                        {proposal.itemDesejado?.nome}
                       </h3>
                       <span
                         className={`px-3 py-1 rounded-full text-sm ${getStatusColor(
@@ -167,20 +168,18 @@ const Proposals = () => {
                         {proposal.status}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 mb-4">
-                      {proposal.descricao}
+                    <p className="text-sm text-gray-600 mb-2">
+                      Ofertante: {proposal.ofertante?.nome || "Usuário"}
+                    </p>
+                    <p className="text-sm text-gray-600 mb-2">
+                      Destinatário:{" "}
+                      {proposal.itemDesejado?.usuario?.nome || "Usuário"}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Criada em:{" "}
+                      {new Date(proposal.createdAt).toLocaleDateString("pt-BR")}
                     </p>
                   </div>
-                </div>
-
-                <div className="mt-4 text-sm text-gray-500">
-                  {activeTab === "received"
-                    ? `Proposta de: ${proposal.proponente?.nome || "Usuário"}`
-                    : `Proposta para: ${
-                        proposal.proprietario?.nome || "Usuário"
-                      }`}
-                  {" • "}
-                  {new Date(proposal.createdAt).toLocaleDateString("pt-BR")}
                 </div>
 
                 {activeTab === "received" && proposal.status === "Pendente" && (

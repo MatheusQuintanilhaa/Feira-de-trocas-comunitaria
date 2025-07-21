@@ -12,15 +12,30 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await sign(form);
+    try {
+      const response = await sign(form);
 
-    if (response.data.token) {
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
-      navigate("/items");
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            id: response.data.id,
+            nome: response.data.nome,
+            email: response.data.email,
+            isAdmin: response.data.isAdmin,
+          })
+        );
+        localStorage.setItem("id", response.data.id);
+        navigate("/items");
+      }
+    } catch (error) {
+      alert(
+        "Erro ao fazer login: " +
+          (error.response?.data?.message || "Credenciais inválidas")
+      );
     }
   };
-
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
