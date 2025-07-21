@@ -7,7 +7,6 @@
 [![Prisma](https://img.shields.io/badge/Prisma-ORM-blueviolet)](https://prisma.io/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue)](https://postgresql.org/)
 
-
 ## 📋 Sobre o Projeto
 
 O **Feira de Trocas Comunitária - Fullstack** é uma plataforma completa (backend + frontend) que permite moradores de uma comunidade trocarem itens em bom estado que não usam mais, como livros, roupas, brinquedos e ferramentas. A aplicação conecta pessoas interessadas em oferecer e receber objetos, promovendo o consumo consciente.
