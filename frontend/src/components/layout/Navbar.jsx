@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
 const Navbar = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, loading } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -12,6 +12,17 @@ const Navbar = () => {
   };
 
   const [menuOpen, setMenuOpen] = useState(false);
+  if (loading) {
+    return (
+      <nav className="bg-white shadow-lg border-b-2 border-green-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16 items-center">
+            <span className="text-gray-500">Carregando...</span>
+          </div>
+        </div>
+      </nav>
+    );
+  }
   return (
     <nav className="bg-white shadow-lg border-b-2 border-green-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
