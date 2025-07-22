@@ -11,87 +11,47 @@ const PORT = process.env.PORT || 8080;
 
 const prisma = new PrismaClient();
 
-// CORS muito permissivo para debug - REMOVER EM PRODUÇÃO
-app.use(
-  cors({
-    origin: true, // Permite qualquer origem
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allowedHeaders: "*",
-  })
-);
+// --- CORREÇÃO PRINCIPAL ---
 
-// Log detalhado para debug
+// 1. Defina as opções do CORS de forma explícita.
+//    Em vez de 'origin: true', é mais seguro e claro listar as origens permitidas.
+const corsOptions = {
+  origin: [
+    "https://feira-de-trocas-comunitaria.vercel.app", // Sua URL de produção
+    "http://localhost:3000", // URL de desenvolvimento do front (se usar )
+    "http://localhost:5173", // Outra porta comum (Vite )
+  ],
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+  credentials: true, // Essencial para enviar cookies ou tokens de autorização
+  allowedHeaders: "Content-Type, Authorization, X-Requested-With",
+};
+
+// 2. Aplique o middleware CORS como o PRIMEIRO de todos.
+//    O pacote 'cors' já lida com as requisições preflight (OPTIONS) automaticamente.
+app.use(cors(corsOptions));
+
+// 3. Middleware de log (opcional, mas útil para debug)
+//    Removida a lógica de CORS e OPTIONS daqui.
 app.use((req, res, next) => {
-  console.log("=== REQUEST DEBUG ===");
-  console.log("Method:", req.method);
-  console.log("URL:", req.url);
-  console.log("Origin:", req.headers.origin);
-  console.log("User-Agent:", req.headers["user-agent"]);
-  console.log("Headers:", JSON.stringify(req.headers, null, 2));
-  console.log("=====================");
-
-  // Headers CORS explícitos
-  // res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
-  // res.header("Access-Control-Allow-Credentials", "true");
-  // res.header(
-  //   "Access-Control-Allow-Methods",
-  //   "GET,POST,PUT,DELETE,OPTIONS,PATCH"
-  // );
-  // res.header("Access-Control-Allow-Headers", "*");
-
-  if (req.method === "OPTIONS") {
-    console.log("OPTIONS preflight handled");
-    return res.status(200).end();
-  }
-
+  console.log(
+    `[${new Date().toISOString()}] ${req.method} ${req.originalUrl} - Origin: ${
+      req.headers.origin
+    }`
+  );
   next();
 });
 
-// Body parsing
+// 4. Body parsing (depois do CORS e log)
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+
+// --- O RESTANTE DO SEU CÓDIGO PERMANECE IGUAL ---
 
 // Health check
 app.get("/", (req, res) => {
   res.status(200).json({
-    message: "API da Feira de Trocas - DEBUG MODE",
-    version: "1.0.0-debug",
+    message: "API da Feira de Trocas - Status OK",
     status: "online",
-    timestamp: new Date().toISOString(),
-    cors: "PERMISSIVO - APENAS PARA DEBUG",
-    url_atual: req.get("host"),
-    endpoints: {
-      users: "/api/users",
-      items: "/api/items",
-      propostas: "/api/propostas",
-      debug: "/api/debug",
-    },
-  });
-});
-
-// Endpoint específico para testar CORS
-app.get("/api/debug", (req, res) => {
-  res.json({
-    success: true,
-    message: "CORS funcionando!",
-    origin: req.headers.origin,
-    host: req.get("host"),
-    protocol: req.protocol,
-    full_url: req.protocol + "://" + req.get("host") + req.originalUrl,
-    method: req.method,
-    timestamp: new Date().toISOString(),
-  });
-});
-
-// Teste POST para login
-app.post("/api/debug/login", (req, res) => {
-  console.log("DEBUG LOGIN - Body:", req.body);
-  res.json({
-    success: true,
-    message: "Endpoint de login acessível",
-    received_data: req.body,
-    timestamp: new Date().toISOString(),
   });
 });
 
@@ -102,40 +62,24 @@ app.use("/api/propostas", propostaRoutes);
 
 // 404 handler
 app.use("*", (req, res) => {
-  console.log(`404 - ${req.method} ${req.originalUrl}`);
   res.status(404).json({
     message: "Rota não encontrada",
     path: req.originalUrl,
-    method: req.method,
-    available_routes: [
-      "/",
-      "/api/users",
-      "/api/items",
-      "/api/propostas",
-      "/api/debug",
-    ],
   });
 });
 
 // Error handler
 app.use((error, req, res, next) => {
-  console.error("ERRO:", error);
+  console.error("ERRO GLOBAL:", error);
   res.status(error.status || 500).json({
-    message: "Erro interno",
+    message: "Erro interno do servidor.",
     error: error.message,
-    stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
   });
 });
 
 // Start server
-const server = app.listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 SERVIDOR DEBUG rodando em: http://0.0.0.0:${PORT}`);
-  console.log(`⚠️  CORS PERMISSIVO - APENAS PARA DEBUG!`);
-  console.log(
-    `🔍 Teste: GET ${
-      process.env.RAILWAY_STATIC_URL || `http://localhost:${PORT}`
-    }/api/debug`
-  );
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
 
 export default app;
