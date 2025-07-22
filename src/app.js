@@ -11,7 +11,13 @@ const PORT = process.env.PORT || 8080;
 
 const prisma = new PrismaClient();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://feira-de-trocas-comunitaria.vercel.app",
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 app.get("/", (req, res) => {
