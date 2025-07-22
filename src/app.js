@@ -11,22 +11,29 @@ const PORT = process.env.PORT || 8080;
 
 const prisma = new PrismaClient();
 
-// --- CONFIGURAÇÃO DE CORS PARA PRODUÇÃO ---
-
-// Lista de origens permitidas. Apenas seu site da Vercel pode fazer requisições.
-const allowedOrigins = ["https://feira-de-trocas-comunitaria.vercel.app"];
+// --- CONFIGURAÇÃO DE CORS ATUALIZADA ---
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Permite requisições sem 'origin' (como Postman ou apps mobile) OU se a origem está na lista
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+    // Lista de padrões de URL permitidos
+    const allowedOriginPatterns = [
+      /^https:\/\/feira-de-trocas-comunitaria\.vercel\.app$/, // Sua URL de produção principal
+      /^https:\/\/feira-de-trocas-comuni-git-.*-matheusquintanilhaas-projects\.vercel\.app$/,
+    ];
+
+    // Permite requisições sem 'origin' (como Postman ) ou que correspondam a um dos padrões da lista
+    if (
+      !origin ||
+      allowedOriginPatterns.some((pattern) => pattern.test(origin))
+    ) {
       callback(null, true);
     } else {
+      console.error(`CORS Error: Origin ${origin} not allowed.`);
       callback(new Error("Not allowed by CORS"));
     }
   },
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true, // Essencial para enviar tokens/cookies
+  credentials: true,
 };
 
 // Aplique o middleware CORS como o PRIMEIRO de todos.
@@ -72,7 +79,6 @@ app.use("*", (req, res) => {
 // Error handler
 app.use((error, req, res, next) => {
   console.error("ERRO GLOBAL:", error);
-  // Se for um erro de CORS, envie uma mensagem mais clara
   if (error.message === "Not allowed by CORS") {
     return res
       .status(403)
