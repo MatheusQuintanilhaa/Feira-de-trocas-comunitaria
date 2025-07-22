@@ -11,12 +11,22 @@ const PORT = process.env.PORT || 8080;
 
 const prisma = new PrismaClient();
 
-app.use(
-  cors({
-    origin: "https://feira-de-trocas-comunitaria.vercel.app",
-    credentials: true,
-  })
-);
+// Configuração CORS completa para frontend na Vercel, aceitando preflight OPTIONS
+const corsOptions = {
+  origin: "https://feira-de-trocas-comunitaria.vercel.app",
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: [
+    "Origin",
+    "X-Requested-With",
+    "Content-Type",
+    "Accept",
+    "Authorization",
+  ],
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // habilita resposta para preflight OPTIONS
 
 app.use(express.json());
 
