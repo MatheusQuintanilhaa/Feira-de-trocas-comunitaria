@@ -1,6 +1,11 @@
 import jwt from "jsonwebtoken";
 
 export default function authenticate(req, res, next) {
+  // Permite que requisições OPTIONS passem direto
+  if (req.method === "OPTIONS") {
+    return next();
+  }
+
   const { authorization } = req.headers;
 
   if (!authorization) {
@@ -18,7 +23,7 @@ export default function authenticate(req, res, next) {
       return res.status(401).json({ error: "Unauthorised." });
     }
 
-    req.userId = userId; // Adiciona o userId ao request
+    req.userId = userId;
     next();
   } catch (error) {
     return res.status(401).json({ error: "Invalid token." });
