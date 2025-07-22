@@ -11,19 +11,30 @@ const PORT = process.env.PORT || 8080;
 
 const prisma = new PrismaClient();
 
-// --- ALTERAÇÃO PARA DEBUG ---
-// Aplicando o middleware CORS da forma mais permissiva possível para o teste.
-// Isso ajuda a confirmar se o problema está na camada de rede/infra do Railway.
-app.use(
-  cors({
-    origin: "*", // Permite QUALQUER origem
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
-    allowedHeaders: "*", // Permite QUALQUER cabeçalho
-    credentials: true,
-  })
-);
+// --- CONFIGURAÇÃO DE CORS PARA PRODUÇÃO ---
 
-// Middleware de log (opcional, mas útil para debug)
+// Lista de origens permitidas. Apenas seu site da Vercel pode fazer requisições.
+const allowedOrigins = ["https://feira-de-trocas-comunitaria.vercel.app"];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Permite requisições sem 'origin' (como Postman ou apps mobile) OU se a origem está na lista
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true, // Essencial para enviar tokens/cookies
+};
+
+// Aplique o middleware CORS como o PRIMEIRO de todos.
+app.use(cors(corsOptions));
+
+// --- FIM DA CONFIGURAÇÃO DE CORS ---
+
+// Middleware de log
 app.use((req, res, next) => {
   console.log(
     `[${new Date().toISOString()}] ${req.method} ${req.originalUrl} - Origin: ${
@@ -33,11 +44,9 @@ app.use((req, res, next) => {
   next();
 });
 
-// Body parsing (depois do CORS e log)
+// Body parsing
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
-
-// --- O RESTANTE DO SEU CÓDIGO PERMANECE IGUAL ---
 
 // Health check
 app.get("/", (req, res) => {
@@ -63,6 +72,12 @@ app.use("*", (req, res) => {
 // Error handler
 app.use((error, req, res, next) => {
   console.error("ERRO GLOBAL:", error);
+  // Se for um erro de CORS, envie uma mensagem mais clara
+  if (error.message === "Not allowed by CORS") {
+    return res
+      .status(403)
+      .json({ message: "Erro de CORS: A sua origem não é permitida." });
+  }
   res.status(error.status || 500).json({
     message: "Erro interno do servidor.",
     error: error.message,
