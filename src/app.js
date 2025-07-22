@@ -11,27 +11,19 @@ const PORT = process.env.PORT || 8080;
 
 const prisma = new PrismaClient();
 
-// --- CORREÇÃO PRINCIPAL ---
+// --- ALTERAÇÃO PARA DEBUG ---
+// Aplicando o middleware CORS da forma mais permissiva possível para o teste.
+// Isso ajuda a confirmar se o problema está na camada de rede/infra do Railway.
+app.use(
+  cors({
+    origin: "*", // Permite QUALQUER origem
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+    allowedHeaders: "*", // Permite QUALQUER cabeçalho
+    credentials: true,
+  })
+);
 
-// 1. Defina as opções do CORS de forma explícita.
-//    Em vez de 'origin: true', é mais seguro e claro listar as origens permitidas.
-const corsOptions = {
-  origin: [
-    "https://feira-de-trocas-comunitaria.vercel.app", // Sua URL de produção
-    "http://localhost:3000", // URL de desenvolvimento do front (se usar )
-    "http://localhost:5173", // Outra porta comum (Vite )
-  ],
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
-  credentials: true, // Essencial para enviar cookies ou tokens de autorização
-  allowedHeaders: "Content-Type, Authorization, X-Requested-With",
-};
-
-// 2. Aplique o middleware CORS como o PRIMEIRO de todos.
-//    O pacote 'cors' já lida com as requisições preflight (OPTIONS) automaticamente.
-app.use(cors(corsOptions));
-
-// 3. Middleware de log (opcional, mas útil para debug)
-//    Removida a lógica de CORS e OPTIONS daqui.
+// Middleware de log (opcional, mas útil para debug)
 app.use((req, res, next) => {
   console.log(
     `[${new Date().toISOString()}] ${req.method} ${req.originalUrl} - Origin: ${
@@ -41,7 +33,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// 4. Body parsing (depois do CORS e log)
+// Body parsing (depois do CORS e log)
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
