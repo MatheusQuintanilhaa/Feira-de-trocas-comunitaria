@@ -32,13 +32,13 @@ app.use((req, res, next) => {
   console.log("=====================");
 
   // Headers CORS explícitos
-  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET,POST,PUT,DELETE,OPTIONS,PATCH"
-  );
-  res.header("Access-Control-Allow-Headers", "*");
+  // res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+  // res.header("Access-Control-Allow-Credentials", "true");
+  // res.header(
+  //   "Access-Control-Allow-Methods",
+  //   "GET,POST,PUT,DELETE,OPTIONS,PATCH"
+  // );
+  // res.header("Access-Control-Allow-Headers", "*");
 
   if (req.method === "OPTIONS") {
     console.log("OPTIONS preflight handled");
